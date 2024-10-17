@@ -1,14 +1,14 @@
 version: '3.8'
 services:
   mongo:
-    image: mongo:70
+    image: mongo:7.0
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongadmin
       MONGO_INITDB_ROOT_PASSWORD: elskerogkode
     ports:
       - 27017:27017
     volumes:
-      - MongodbData:/data/db
+      - mongodata:/data/db
 volumes:
   mongodata:
     driver: local
