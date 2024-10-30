@@ -1,15 +1,8 @@
 import React from 'react';
 
-export default function Parkinglot1({ slot1, slot2, slot3, slot4, slot5 }) {
+export default function Parkinglotgraphic({ slot1, slot2, slot3, slot4, slot5 }) {
     return (
         <div>
-            <h3>Parking Slot Statuses:</h3>
-            <p>Slot 1: {slot1 ? 'Occupied' : 'Free'}</p>
-            <p>Slot 2: {slot2 ? 'Occupied' : 'Free'}</p>
-            <p>Slot 3: {slot3 ? 'Occupied' : 'Free'}</p>
-            <p>Slot 4: {slot4 ? 'Occupied' : 'Free'}</p>
-            <p>Slot 5: {slot5 ? 'Occupied' : 'Free'}</p>
-            
             <svg width="510" height="150" xmlns="http://www.w3.org/2000/svg">
                 <rect x="0" y="0" width="500" height="10" fill="black"/>
                 <rect x="0" y="0" width="10" height="150" fill="black" />

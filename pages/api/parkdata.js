@@ -9,6 +9,7 @@ export default async function handler(req, res) {
 
   const { parkingLotName, timestamp, spots } = req.body;
   await mongooseConnect();
+  console.log("request: " + JSON.stringify(req.body));
   const dateTimeStart = new Date(timestamp + "Z");
   const oneHourLater = new Date(dateTimeStart.getTime() + 60 * 60 * 1000);
   const existingParkData = await ParkData.findOne({

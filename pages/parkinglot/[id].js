@@ -1,13 +1,11 @@
-// pages/parkinglot.js
 import React, { useState, useEffect } from 'react';
-import Parkinglot1 from '../components/parkinglot1';
-import { connectToBroker } from '../lib/mqtt'; // Import the functions from mqtt.js
+import Parkinglotgraphic from '@/components/parkinglotgraphic';
+import { connectToBroker } from '@/lib/mqtt';
 import Layout from '@/components/Layout';
 
 const ParkinglotPage = () => {
   const [parkingSpots, setParkingSpots] = useState(null); // Start with null to indicate loading
   
-  // Connect to MQTT when the component mounts
   useEffect(() => {
     const disconnect = connectToBroker('parking/updates', setParkingSpots);
     
@@ -35,7 +33,7 @@ const ParkinglotPage = () => {
     <Layout>
       <div className="flex flex-col justify-center items-center">
         <h1>Parking Lot Availability</h1>
-        <Parkinglot1 
+        <Parkinglotgraphic 
           slot1={slot1} 
           slot2={slot2} 
           slot3={slot3} 

@@ -1,0 +1,6 @@
+ssh shastrup@79.171.148.142
+
+mqtt pub -h 79.171.148.142 -t parking/updates -m "{'parkingLotName': 'LotA', 'timestamp': '2024-10-18T13:41:00', 'spots': [{'isFree': true}, {'isFree': true}, {'isFree': true}, {'isFree': false}, {'isFree': false}]}" -u Grp2 -P ElskerOgKode321
+
+mongodb
+simonhastrupjensen TvrLm9gVK7ahWEPt
