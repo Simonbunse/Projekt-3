@@ -19,7 +19,7 @@ services:
       MONGODB_URI: "mongodb://simonhastrupjensen:TvrLm9gVK7ahWEPt@mongodb:27017/?retryWrites=true&w=majority"
       NEXT_PUBLIC_MQTT_USER: "Grp2"
       NEXT_PUBLIC_MQTT_PASS: "ElskerOgKode321"
-      MQTT_URI: "ws://13.53.41.240:1883"
+      NEXT_PUBLIC_MQTT_IP: "ws://13.53.41.240:9001"
     ports:
       - "3000:3000"
     depends_on:

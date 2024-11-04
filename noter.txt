@@ -17,4 +17,5 @@ simonhastrupjensen TvrLm9gVK7ahWEPt
 online mongodb: MONGODB_URI="mongodb+srv://simonhastrupjensen:TvrLm9gVK7ahWEPt@cluster0.e3e1e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 docker mongodb: MONGODB_URI="mongodb://simonhastrupjensen:TvrLm9gVK7ahWEPt@mongodb:27017/?retryWrites=true&w=majority"
 
-qtt pub -h 13.53.41.240 -t parking/updates -m "{'parkingLotName': 'LotA', 'timestamp': '2024-10-18T13:41:00', 'spots': [{'isFree': true}, {'isFree': true}, {'isFree': true}, {'isFree': false}, {'isFree': false}]}"
+mqtt pub -h 13.53.41.240 -t parking/updates -m "{'parkingLotName': 'LotA', 'timestamp': '2024-10-18T13:41:00', 'spots': [{'isFree': true}, {'isFree': true}, {'isFree': true}, {'isFree': false}, {'isFree': false}]}" -u Grp2 -P ElskerOgKode321
+mqtt sub -h 13.53.41.240 -t parking/update -u Grp2 -P ElskerOgKode321
