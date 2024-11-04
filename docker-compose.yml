@@ -1,14 +1,26 @@
 version: '3.8'
+
 services:
-  mongo:
-    image: mongo:7.0
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: mongadmin
-      MONGO_INITDB_ROOT_PASSWORD: elskerogkode
+      MONGO_INITDB_ROOT_USERNAME: simonhastrupjensen
+      MONGO_INITDB_ROOT_PASSWORD: TvrLm9gVK7ahWEPt
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
-      - mongodata:/data/db
-volumes:
-  mongodata:
-    driver: local
+      - /data:/data/db 
+
+  nextjs-app:
+    build: .
+    container_name: nextjs-app
+    environment:
+      MONGODB_URI: "mongodb://simonhastrupjensen:TvrLm9gVK7ahWEPt@mongodb:27017/?retryWrites=true&w=majority"
+      NEXT_PUBLIC_MQTT_USER: "Grp2"
+      NEXT_PUBLIC_MQTT_PASS: "ElskerOgKode321"
+      MQTT_URI: "ws://13.53.41.240:1883"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb

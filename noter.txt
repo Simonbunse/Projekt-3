@@ -4,3 +4,17 @@ mqtt pub -h 79.171.148.142 -t parking/updates -m "{'parkingLotName': 'LotA', 'ti
 
 mongodb
 simonhastrupjensen TvrLm9gVK7ahWEPt
+
+{
+    "DeviceId": "1",
+    "data": [
+        {"ArrivalTime": "01/01/2019 11:00:00 PM"},
+        {"DepartureTime": "01/02/2019 12:00:00 AM"},
+        {"VehiclePresent": false}
+    ]
+}
+
+online mongodb: MONGODB_URI="mongodb+srv://simonhastrupjensen:TvrLm9gVK7ahWEPt@cluster0.e3e1e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+docker mongodb: MONGODB_URI="mongodb://simonhastrupjensen:TvrLm9gVK7ahWEPt@mongodb:27017/?retryWrites=true&w=majority"
+
+qtt pub -h 13.53.41.240 -t parking/updates -m "{'parkingLotName': 'LotA', 'timestamp': '2024-10-18T13:41:00', 'spots': [{'isFree': true}, {'isFree': true}, {'isFree': true}, {'isFree': false}, {'isFree': false}]}"

@@ -1,3 +1,4 @@
+// /pages/parkinglot/
 import React, { useState, useEffect } from 'react';
 import Parkinglotgraphic from '@/components/parkinglotgraphic';
 import { connectToBroker } from '@/lib/mqtt';
@@ -9,7 +10,6 @@ const ParkinglotPage = () => {
   useEffect(() => {
     const disconnect = connectToBroker('parking/updates', setParkingSpots);
     
-    // Cleanup on unmount
     return () => {
       disconnect();
     };
