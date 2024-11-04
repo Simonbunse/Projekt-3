@@ -21,6 +21,6 @@ services:
       NEXT_PUBLIC_MQTT_PASS: "ElskerOgKode321"
       NEXT_PUBLIC_MQTT_IP: "ws://13.53.41.240:9001"
     ports:
-      - "3000:3000"
+      - "3001:3001"
     depends_on:
       - mongodb
