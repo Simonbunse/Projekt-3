@@ -10,7 +10,8 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - /data:/data/db 
+      - /data:/data/db
+    restart: always
 
   nextjs-app:
     build: .
@@ -24,3 +25,4 @@ services:
       - "3001:3001"
     depends_on:
       - mongodb
+    restart: always

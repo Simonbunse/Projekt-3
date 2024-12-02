@@ -17,5 +17,13 @@ simonhastrupjensen TvrLm9gVK7ahWEPt
 online mongodb: MONGODB_URI="mongodb+srv://simonhastrupjensen:TvrLm9gVK7ahWEPt@cluster0.e3e1e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 docker mongodb: MONGODB_URI="mongodb://simonhastrupjensen:TvrLm9gVK7ahWEPt@mongodb:27017/?retryWrites=true&w=majority"
 
-mqtt pub -h 13.53.41.240 -t parking/updates -m "{'parkingLotName': 'LotA', 'timestamp': '2024-10-18T13:41:00', 'spots': [{'isFree': true}, {'isFree': true}, {'isFree': true}, {'isFree': false}, {'isFree': false}]}" -u Grp2 -P ElskerOgKode321
-mqtt sub -h 13.53.41.240 -t parking/update -u Grp2 -P ElskerOgKode321
+mqtt pub -h 79.171.148.142 -t parking/update -m "{streetName:BOURKE STREET,betweenStreets:BATMANS HILL DRIVE - HARBOUR ESPLANADE,deviceId:12346,vehiclePresent:false}" -u grp2 -P ElskerOgKode321
+mqtt sub -h 79.171.148.142 -t parking/update -u grp2 -P ElskerOgKode321
+
+train_data = pd.read_csv(r"C:\Users\simon\OneDrive\IT-Teknolog\projekt3\filtered_training_data.csv")
+test_data = pd.read_csv(r"C:\Users\simon\OneDrive\IT-Teknolog\projekt3\filtered_test_data.csv")
+
+oneshot_encoder = joblib.load(r'C:\temp\onehot_encoder.pkl')
+model = joblib.load(r'C:\temp\parking_availability_model.pkl')
+
+ssh -i "flask-test-aws-key-pai.pem" ubuntu@ec2-16-170-244-210.eu-north-1.compute.amazonaws.com
