@@ -1,23 +1,23 @@
-# Use the official Node.js image as a base image
-FROM node:18
+# Step 1: Use official Node.js image as the base image
+FROM node:18 AS base
 
-# Set the working directory
+# Step 2: Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Step 3: Copy package.json and package-lock.json to the container
+COPY package.json package-lock.json ./
 
-# Install dependencies
+# Step 4: Install dependencies
 RUN npm install
 
-# Copy the rest of your application code
+# Step 5: Copy the rest of the application files
 COPY . .
 
-# Build the Next.js application
+# Step 6: Build the Next.js application
 RUN npm run build
 
-# Expose the application port
-EXPOSE 3001
+# Step 7: Expose the ports for Next.js and the MQTT server
+EXPOSE 3000 1883
 
-# Start the Next.js application
-CMD ["npm", "start"]
+# Step 8: Start both services (Next.js app and MQTT server)
+CMD npm run start & npm run mqtt

@@ -1,4 +1,3 @@
-// pages/api/parkdataaus.js
 import { mongooseConnect } from "@/lib/mongoose";
 import { ParkDataAusTests } from "@/models/ParkDataAusTests";
 
@@ -10,9 +9,14 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { deviceId, timestamp, streetName, betweenStreet1, betweenStreet2, vehiclePresent } = req.body;
+  // Log the request body
+  console.log("Request Body:", req.body);
 
-  if (!deviceId || !timestamp || !streetName || !betweenStreet1 || !betweenStreet2 || vehiclePresent === undefined) {
+  // Destructure required fields from the request body
+  const { deviceId, timestamp, streetName, betweenStreets, vehiclePresent } = req.body;
+
+  // Validate required fields
+  if (!deviceId || !timestamp || !streetName || !betweenStreets || vehiclePresent === undefined) {
     res.status(400).json({ message: 'Missing required fields in request body' });
     return;
   }
@@ -21,82 +25,76 @@ export default async function handler(req, res) {
   const dateTimeStart = `${dateStart}T00:00:00Z`;
   const dateTimeEnd = `${dateStart}T23:59:59.999999Z`;
 
-  const existingDocument = await ParkDataAusTests.findOne({ DeviceId: deviceId, dateTimeStart });
+  try {
+    // Check if a document for the given date and deviceId exists
+    const existingDocument = await ParkDataAusTests.findOne({ deviceId, dateTimeStart });
 
-  if (existingDocument) {
-    console.log('Document already exists');
+    if (existingDocument) {
+      console.log('Document already exists');
 
-    const lineItems = existingDocument.line_items;
+      const lineItems = existingDocument.line_items;
 
-    if (!lineItems || lineItems.length === 0) {
-      res.status(500).json({ message: 'Existing document has no line items to reference' });
-      return;
-    }
+      if (!lineItems || lineItems.length === 0) {
+        res.status(500).json({ message: 'Existing document has no line items to reference' });
+        return;
+      }
 
-    // Exclude the last placeholder object from timestamp validation
-    const lastValidLineItem = lineItems[lineItems.length - 2] || lineItems[lineItems.length - 1];
+      // Exclude the last placeholder object from timestamp validation
+      const lastValidLineItem = lineItems[lineItems.length - 2] || lineItems[lineItems.length - 1];
 
-    // Validate that the new timestamp is later than the previous DepartureTime
-    if (new Date(timestamp) <= new Date(lastValidLineItem.DepartureTime)) {
-      res.status(400).json({
-        message: `Invalid timestamp: ${timestamp} is earlier than or equal to the previous DepartureTime: ${lastValidLineItem.DepartureTime}`
-      });
-      return;
-    }
+      // Validate that the new timestamp is later than the previous DepartureTime
+      if (new Date(timestamp) <= new Date(lastValidLineItem.departureTime)) {
+        res.status(400).json({
+          message: `Invalid timestamp: ${timestamp} is earlier than or equal to the previous departureTime: ${lastValidLineItem.departureTime}`
+        });
+        return;
+      }
 
-    try {
-      // Update the placeholder last item with new DepartureTime
+      // Update the placeholder last item with new departureTime
       const lastLineItem = lineItems[lineItems.length - 1];
-      lastLineItem.DepartureTime = timestamp;
-      lastLineItem.VehiclePresent = vehiclePresent;
+      lastLineItem.departureTime = timestamp;
+      lastLineItem.vehiclePresent = vehiclePresent;
 
       // Add a new placeholder line item for the end of the day
       const newLineItem = {
-        ArrivalTime: timestamp,
-        DepartureTime: dateTimeEnd,
-        VehiclePresent: vehiclePresent
+        arrivalTime: timestamp,
+        departureTime: dateTimeEnd,
+        vehiclePresent
       };
 
       existingDocument.line_items.push(newLineItem);
       await existingDocument.save();
 
       res.status(200).json({ message: 'New line item added and placeholder updated', data: newLineItem });
-    } catch (error) {
-      console.error('Error updating document:', error);
-      res.status(500).json({ message: 'Error updating document', error });
+      return;
     }
 
-    return;
-  }
+    // If no document exists, create a new one
+    const initialLineItem = {
+      arrivalTime: dateTimeStart,
+      departureTime: timestamp,
+      vehiclePresent
+    };
 
-  // If no document exists, create a new one
-  const initialLineItem = {
-    ArrivalTime: dateTimeStart,
-    DepartureTime: timestamp,
-    VehiclePresent: vehiclePresent
-  };
+    const placeholderLineItem = {
+      arrivalTime: timestamp,
+      departureTime: dateTimeEnd,
+      vehiclePresent
+    };
 
-  const placeholderLineItem = {
-    ArrivalTime: timestamp,
-    DepartureTime: dateTimeEnd,
-    VehiclePresent: vehiclePresent
-  };
+    const newDocument = {
+      deviceId,
+      dateTimeStart,
+      dateTimeEnd,
+      streetName,
+      betweenStreets, // Directly use the combined field
+      line_items: [initialLineItem, placeholderLineItem]
+    };
 
-  const newDocument = {
-    DeviceId: deviceId,
-    dateTimeStart,
-    dateTimeEnd,
-    StreetName: streetName,
-    BetweenStreet1: betweenStreet1,
-    BetweenStreet2: betweenStreet2,
-    line_items: [initialLineItem, placeholderLineItem]
-  };
-
-  try {
     const savedDocument = await ParkDataAusTests.create(newDocument);
     res.status(201).json({ message: 'Document created successfully with initial and placeholder line items', data: savedDocument });
   } catch (error) {
-    console.error('Error saving document:', error);
-    res.status(500).json({ message: 'Error saving document', error });
+    console.error('Error processing request:', error);
+    res.status(500).json({ message: 'Internal server error', error });
   }
 }

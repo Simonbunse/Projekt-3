@@ -28,16 +28,24 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (method === 'GET') {
-    try {
-      const streetsData = await StreetsData.find({});
-      res.status(200).json(streetsData);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to fetch streets data' });
-    }
-    return;
+if (method === 'GET') {
+  try {
+    const { streetName } = req.query;
+
+    // Build the query object
+    const query = streetName ? { streetName: streetName.toUpperCase() } : {};
+
+    // Fetch filtered data
+    const streetsData = await StreetsData.find(query);
+
+    res.status(200).json(streetsData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch streets data' });
   }
+  return;
+}
+
 
   if (method === "PUT") {
     const { streetName, betweenStreets, deviceId, vehiclePresent, addNewDevice } = req.body;
